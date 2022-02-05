@@ -28,10 +28,10 @@ int main(void)
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
 	delay_init(168);    //初始化延时函数
 	uart_init(115200);	//初始化串口波特率为115200
-	
+	SMBus_HW_init();
 	LED_Init();					//初始化LED 
-	KEY_Init(); 				//按键初始化  
-	AT24CXX_Init();				//IIC初始化 
+//	KEY_Init(); 				//按键初始化  
+//	AT24CXX_Init();				//IIC初始化 
 
 // 	while(AT24CXX_Check())//检测不到24c02
 //	{
@@ -40,23 +40,42 @@ int main(void)
 //		LED0=!LED0;//DS0闪烁
 //	}
 
+	
+	//SMBus_FindAddr_Test();
+	
+	/* first group*/
+	/* 读取制造商名称 */
+	SMBus_Get_ManuName();
+	/* second group*/
+	SMBus_Get_Temp();
+	SMBus_Get_Voltage();
+	SMBus_Get_Current();
+	SMBus_Get_AverageCurrent();
+	SMBus_Get_MaxError();
+	SMBus_Get_RelativeStateOfCharge();
+	SMBus_Get_AbsouluteStateOfCharge();
+  SMBus_Get_RemainingCapacity();
+	/* third group*/
+  SMBus_Get_FullChargeCapacity();
+	
+	
 	while(1)
 	{
-		key=KEY_Scan(0);
-		if(key==KEY1_PRES)//KEY1按下,写入24C02
-		{
+//		key=KEY_Scan(0);
+//		if(key==KEY1_PRES)//KEY1按下,写入24C02
+//		{
 
-//			AT24CXX_Write(0,(u8*)TEXT_Buffer,SIZE);
-			SMBus_FindAddr_Test();
-//			SMBus_Get_Voltage();
-//			SMBus_Get_ManuName();
-		}
-		if(key==KEY0_PRES)//KEY0按下,读取字符串并显示
-		{
+////			AT24CXX_Write(0,(u8*)TEXT_Buffer,SIZE);
+//			SMBus_FindAddr_Test();
+////			SMBus_Get_Voltage();
+////			SMBus_Get_ManuName();
+//		}
+//		if(key==KEY0_PRES)//KEY0按下,读取字符串并显示
+//		{
 
-			AT24CXX_Read(0,datatemp,SIZE);
-			printf("temp=%s,%d\n", datatemp, datatemp[8]);
-		}
+//			AT24CXX_Read(0,datatemp,SIZE);
+//			printf("temp=%s,%d\n", datatemp, datatemp[8]);
+//		}
 		i++;
 		delay_ms(10);
 		if(i==20)

@@ -3,8 +3,8 @@
 #include "usart.h"
 
 /********************************
-*备注：使用I2C1
-       PB8————SCL，PB9————SDA
+*备注：使用I2C2
+       PB10————SCL，PB11————SDA
 ********************************/
 void SMBus_Init(void)
 {
@@ -12,8 +12,8 @@ void SMBus_Init(void)
 
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);//使能GPIOB时钟
 
-	//GPIOB8,B9初始化设置
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9;
+	//SMBus_SCL_Pin,SMBus_SDA_Pin初始化设置
+	GPIO_InitStructure.GPIO_Pin = SMBus_SCL_Pin | SMBus_SDA_Pin;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//普通输出模式  
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;//推挽输出   
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
@@ -28,14 +28,14 @@ void SMBus_Init(void)
 void SMBus_Start(void)
 {
     SDA_OUT();
-	SMBus_SDA_H; 
+	  SMBus_SDA_H; 
     delay_us(1);
     SMBus_SCL_H;
     delay_us(5);
     SMBus_SDA_L;//START:when CLK is high,DATA change form high to low
     delay_us(5);
     SMBus_SCL_L;//钳住I2C总线，准备发送或接收数据
-	delay_us(2);
+	  delay_us(2);
 }  
   
 
@@ -248,7 +248,7 @@ int16_t Get_Battery_Info(uint8_t slaveAddr,uint8_t slaveAddr1, uint8_t Comcode)
          return -1;
      }
      
-	 SMBus_Start();
+	   SMBus_Start();
      SMBus_Send_Byte(slaveAddr1);//发送地址
      if(SMBus_Wait_Ack() == 1)
      {

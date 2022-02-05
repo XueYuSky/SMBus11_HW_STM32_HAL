@@ -14,7 +14,7 @@ void SMBus_HW_init()
     RCC_APB1PeriphClockCmd(SMBus_RCC_Periph, ENABLE);
     RCC_AHB1PeriphClockCmd(SMBus_RCC_Port, ENABLE);
 
-	GPIO_PinAFConfig(SMBus_Port, SMBus_SCL_PinSource, SMBus_GPIO_AF);
+	  GPIO_PinAFConfig(SMBus_Port, SMBus_SCL_PinSource, SMBus_GPIO_AF);
     GPIO_PinAFConfig(SMBus_Port, SMBus_SDA_PinSource, SMBus_GPIO_AF);
 	
     /* Configure SMBus pins: SCL and SDA */
@@ -250,7 +250,7 @@ void SMBus_Read_Word(uint8_t slaveAddr, uint16_t* data, uint8_t cmd)
     I2C_GenerateSTOP(SMBus_NAME, ENABLE);
 
     *data = ((uint16_t)buff[1] << 8) | buff[0];  //MSB
-	printf("info=%d\n", *data);
+	printf(" info = %d  \n", *data);
 }
 
 /* 读块 */
@@ -329,10 +329,11 @@ void SMBus_Read_Block(uint8_t slaveAddr, uint8_t* data, uint8_t cmd)
     I2C_GenerateSTOP(SMBus_NAME, ENABLE);
 	
 	memcpy(data, buff+1, buff[0]);
-	printf("str=%s,size=%d\n", buff+1, strlen((char*)buff)-1);
+	printf(" str=%s,size=%d \n", buff+1, strlen((char*)buff)-1);
 	
 	for(i=1; i<buff[0]+1; i++)
 		printf("%c\n", buff[i]);
+	printf("\r\n");
 }
 
 /* SMBus读字信息 */
@@ -349,6 +350,15 @@ void SMBus_Block_Get_Info(uint8_t slaveAddr, uint8_t* RData, uint8_t slaveCmd)
 	SMBus_Read_Block(slaveAddr, RData, slaveCmd);
 }
 
+/* 通用读取命令 */
+uint16_t SMBus_Get_Voltage(uint8_t cmd)
+{
+	uint16_t Value = 0;
+	
+	Value = SMBus_Word_Get_Info(SLAVE_ADDE, cmd);
+	printf("%s = %d\r\n",cmd, Value);
+	return Value;		
+}
 
 /* 读取电池电压值 */
 uint16_t SMBus_Get_Voltage(void)
@@ -356,7 +366,7 @@ uint16_t SMBus_Get_Voltage(void)
 	uint16_t Value = 0;
 	
 	Value = SMBus_Word_Get_Info(SLAVE_ADDE, Voltage);
-	printf("Vol=%d\n", Value);
+	printf("Vol=%d\r\n", Value);
 	return Value;		
 }
 
@@ -364,9 +374,13 @@ uint16_t SMBus_Get_Voltage(void)
 uint16_t SMBus_Get_Temp(void)
 {
 	uint16_t Value = 0;
+	float temp = 0;
 	
 	Value = SMBus_Word_Get_Info(SLAVE_ADDE, Temperature);
-	printf("Temp=%d\n", Value);
+	printf("Temp=%d \r\n", Value);
+	/*Value 的值的单位是0.1K ,转换为K后再转换为摄氏温度*/
+	temp = Value/10 -273.15;
+	printf(" Temprature in DegC = %.2f \r\n", temp);
 	return Value;		
 }
 
@@ -375,6 +389,58 @@ void SMBus_Get_ManuName(void)
 {
 	uint8_t Value[20] = {0};
 	SMBus_Block_Get_Info(SLAVE_ADDE, Value, ManufacturerName);	
+}
+
+/* 读取电流 */
+void SMBus_Get_Current(void)
+{
+	uint16_t Value = 0;
+  Value = SMBus_Word_Get_Info(SLAVE_ADDE, Current);
+	printf("Current=%d\r\n", Value);	
+}
+
+/* 读取平均电流 */
+void SMBus_Get_AverageCurrent(void)
+{
+	uint16_t Value = 0;
+  Value = SMBus_Word_Get_Info(SLAVE_ADDE, AverageCurrent);
+	printf("AverageCurrent=%d\r\n", Value);	
+}
+/* 读取MaxError */
+void SMBus_Get_MaxError(void)
+{
+	uint16_t Value = 0;
+  Value = SMBus_Word_Get_Info(SLAVE_ADDE, MaxError);
+	printf("MaxError=%d\r\n", Value);	
+}
+/* 读取RelativeStateOfCharge */
+void SMBus_Get_RelativeStateOfCharge(void)
+{
+	uint16_t Value = 0;
+  Value = SMBus_Word_Get_Info(SLAVE_ADDE, RelativeStateOfCharge);
+	printf("RelativeStateOfCharge=%d\r\n", Value);	
+}
+
+/* 读取AbsouluteStateOfCharge */
+void SMBus_Get_AbsouluteStateOfCharge(void)
+{
+	uint16_t Value = 0;
+  Value = SMBus_Word_Get_Info(SLAVE_ADDE, AbsouluteStateOfCharge);
+	printf("AbsouluteStateOfCharge=%d\r\n", Value);	
+}
+/* 读取RemainingCapacity */
+void SMBus_Get_RemainingCapacity(void)
+{
+	uint16_t Value = 0;
+  Value = SMBus_Word_Get_Info(SLAVE_ADDE, RemainingCapacity);
+	printf("RemainingCapacity=%d\r\n", Value);	
+}
+/* 读取FullChargeCapacity*/
+void SMBus_Get_FullChargeCapacity(void)
+{
+	uint16_t Value = 0;
+  Value = SMBus_Word_Get_Info(SLAVE_ADDE, FullChargeCapacity);
+	printf("FullChargeCapacity=%d\r\n", Value);	
 }
 
 /* 测试从设备地址，这里的地址是设备写地址（8bit） */
