@@ -57,7 +57,16 @@ int main(void)
   SMBus_Get_RemainingCapacity();
 	/* third group*/
   SMBus_Get_FullChargeCapacity();
+	/* Voltage- Subclass 0 */
+	SMBus_Get_Parameter("    CelVoltage4 ",0x3c);
+	SMBus_Get_Parameter("    CelVoltage3 ",0x3d);
+	SMBus_Get_Parameter("    CelVoltage2 ",0x3e);
+	SMBus_Get_Parameter("    CelVoltage1 ",0x3f);
+	SMBus_Get_Parameter("    SafetyStatus",0x51);
+	SMBus_Get_Parameter("    TemppRange  ",0x72);
+	/* Current- Subclass 1 */
 	
+	/* Temperature- Subclass 2 */
 	
 	while(1)
 	{
@@ -77,11 +86,31 @@ int main(void)
 //			printf("temp=%s,%d\n", datatemp, datatemp[8]);
 //		}
 		i++;
-		delay_ms(10);
+		delay_ms(100);
 		if(i==20)
 		{
 			LED0=!LED0;//提示系统正在运行	
 			i=0;
+			
+//				SMBus_Get_ManuName();
+//				/* second group*/
+//				SMBus_Get_Temp();
+//				SMBus_Get_Voltage();
+//				SMBus_Get_Current();
+//				SMBus_Get_AverageCurrent();
+//				SMBus_Get_MaxError();
+//				SMBus_Get_RelativeStateOfCharge();
+//				SMBus_Get_AbsouluteStateOfCharge();
+//				SMBus_Get_RemainingCapacity();
+//				/* third group*/
+//				SMBus_Get_FullChargeCapacity();
+//				/* Voltage- Subclass 0 */
+//				SMBus_Get_Parameter("    CelVoltage4 ",0x3c);
+//				SMBus_Get_Parameter("    CelVoltage3 ",0x3d);
+//				SMBus_Get_Parameter("    CelVoltage2 ",0x3e);
+//				SMBus_Get_Parameter("    CelVoltage1 ",0x3f);
+//				SMBus_Get_Parameter("    SafetyStatus",0x51);
+//				SMBus_Get_Parameter("    TemppRange  ",0x72);
 		}		   
 	} 	    
 }
