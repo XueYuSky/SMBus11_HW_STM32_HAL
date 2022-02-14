@@ -65,6 +65,12 @@
 /* Extended SBS Commands Start*/
 // 后期需用结构体重新定义
 // Reserved
+#define CelVoltage4               0x3c
+#define CelVoltage3               0x3d
+#define CelVoltage2               0x3e
+#define CelVoltage1               0x3f
+
+
 #define AFEData                   0x45
 #define FETControl                0x46
 #define PendingEDV                0x47
@@ -112,6 +118,7 @@ uint8_t SMBus_Write_Word(uint8_t slaveAddr, uint16_t data, uint8_t WriteCmd);
 void SMBus_Read_Word(uint8_t slaveAddr, uint16_t* data, uint8_t ReadAddr);
 uint8_t SMBus_Write_Byte(uint8_t slaveAddr, uint8_t WriteCmd);
 
+uint16_t SMBus_Get_Parameter(char * str,uint8_t cmd);
 uint16_t SMBus_Get_Temp(void);
 uint16_t SMBus_Get_Voltage(void);
 void SMBus_Get_Current(void);

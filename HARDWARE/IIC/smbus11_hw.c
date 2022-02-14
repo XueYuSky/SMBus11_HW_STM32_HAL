@@ -351,12 +351,12 @@ void SMBus_Block_Get_Info(uint8_t slaveAddr, uint8_t* RData, uint8_t slaveCmd)
 }
 
 /* Õ®”√∂¡»°√¸¡Ó */
-uint16_t SMBus_Get_Voltage(uint8_t cmd)
+uint16_t SMBus_Get_Parameter(char * str,uint8_t cmd)
 {
 	uint16_t Value = 0;
 	
 	Value = SMBus_Word_Get_Info(SLAVE_ADDE, cmd);
-	printf("%s = %d\r\n",cmd, Value);
+	printf("%s = %d\r\n",str, Value);
 	return Value;		
 }
 
